@@ -98,8 +98,8 @@ class Map extends Component {
         zoom = this.zoomToDistance(this.props.filters.distance);
       }
 
-      this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
       this.addDistanceIndicatorLayer();
+      this.props.setSearchCenterCoordinates(geometry.coordinates, id, text);
       map.flyTo({
         center: geometry.coordinates,
         zoom: zoom
