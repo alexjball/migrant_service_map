@@ -12,7 +12,6 @@ export default class ProviderTypeDropdown extends React.Component {
   };
 
   clearProviderTypes = event => {
-    event.stopPropagation();
     const { onChange = () => {} } = this.props;
     onChange(undefined);
   };

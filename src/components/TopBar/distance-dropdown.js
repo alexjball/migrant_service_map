@@ -20,7 +20,6 @@ export default class DistanceDropdown extends React.Component {
   };
 
   clearDistance = event => {
-    event.stopPropagation();
     const { onChange = () => {} } = this.props;
     onChange(undefined);
     this.setState({ distanceText: defaultDistanceText });
