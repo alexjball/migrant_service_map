@@ -26,7 +26,6 @@ const mapStateToProps = state => {
     visibleTypes: state.providerTypes.visible,
     filters: state.filters,
     providerTypes: state.providerTypes,
-    mapObject: state.mapObject
   };
 };
 

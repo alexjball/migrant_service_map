@@ -2,10 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   initializeProviders,
-  initializeVisaFilter,
   setSearchCenterCoordinates,
   displayProviderInformation,
-  setMapObject
 } from "redux/actions";
 import { getProvidersSorted } from "redux/selectors";
 import Map from "./map";
@@ -30,14 +28,8 @@ const mapDispatchToProps = dispatch => {
     initializeProviders: providers => {
       dispatch(initializeProviders(providers));
     },
-    initializeVisaFilter: visas => {
-      dispatch(initializeVisaFilter(visas));
-    },
     displayProviderInformation: id => {
       dispatch(displayProviderInformation(id));
-    },
-    setMapObject: mapObject => {
-      dispatch(setMapObject(mapObject));
     },
     setSearchCenterCoordinates: (coordinates, mapboxId, text) => {
       dispatch(setSearchCenterCoordinates(coordinates, mapboxId, text));
