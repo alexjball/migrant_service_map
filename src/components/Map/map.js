@@ -18,6 +18,27 @@ import {
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
 
+/**
+ * A React component that manages a Mapbox instance and handles all interactions with it.
+ * 
+ * props: 
+ * - search.coordinates: [lat, lon]
+ * - search.mapCenter: [lat, lon] initial map coordinate
+ * - search.currentLocation: -(initial)> "default" -(on result)> mapbox UUID -(on clear)> 1
+ * - search.flyToProviderId: id of the provider to fly the map to.
+ * - filters.distance: selected distance filter to apply
+ * - providers(.byId): All providers, whether displayed or not
+ * - providersList: Collection of providers to be displayed, structured as in the list UI
+ * - providerTypes(.allIds): List of provider type names, all providers keyed by type, and list of visible types
+ * - highlightedProviders: List of provider ID's that are highlighted/selected
+ * 
+ * - initializeProviders: Passes provider data loaded using Mapbox to redux.
+ * - setSearchCenterCoordinates: updates search.coordinates.
+ * - displayProviderInformation: toggles highlighting for the given provider id.
+ * 
+ * state:
+ * - loaded: Whether the map has finished loading.
+ */
 class Map extends Component {
   constructor(props) {
     super(props);
