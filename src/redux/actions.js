@@ -15,6 +15,16 @@ export const REORDER_SAVED_PROVIDERS = "REORDER_SAVED_PROVIDERS";
 export const CHANGE_SORT_ORDER = "CHANGE_SORT_ORDER";
 export const CHANGE_SORT_DIRECTION = "CHANGE_SORT_DIRECTION";
 export const FLY_TO_PROVIDER = "FLY_TO_PROVIDER";
+export const ZOOM_TO_FIT = "ZOOM_TO_FIT";
+
+/**
+ * Returns a new number each time it's called, useful to differentiate actions that would
+ * otherwise contain the same data.
+ */
+const nextActionKey = (() => {
+  let actionKey = 0;
+  return () => actionKey++;
+})();
 
 export const initializeProviders = providers => {
   // TODO WHEN ASYNC async dispatch => {
@@ -124,17 +134,23 @@ export function changeSortOrder(id) {
   };
 }
 
-
 export function changeSortDirection(direction) {
   return {
     type: CHANGE_SORT_DIRECTION,
     direction
-  }
+  };
 }
 
 export function flyToProvider(id) {
   return {
     type: FLY_TO_PROVIDER,
     id
-  }
+  };
+}
+
+export function zoomToFit() {
+  return {
+    type: ZOOM_TO_FIT,
+    key: nextActionKey()
+  };
 }

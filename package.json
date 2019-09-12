@@ -9,6 +9,7 @@
     "@mapbox/mapbox-gl-geocoder": "^2.3.0",
     "@turf/turf": "^5.1.6",
     "classnames": "^2.2.6",
+    "core-js": "^3.2.1",
     "dot-prop-immutable": "^1.5.0",
     "lodash": "^4.17.11",
     "mapbox": "^1.0.0-beta10",
@@ -20,6 +21,7 @@
     "react-redux": "^6.0.0",
     "react-scripts": "^3.0.1",
     "react-tabs": "^3.0.0",
+    "react-tooltip": "^3.11.0",
     "redux": "^4.0.1",
     "reselect": "^4.0.0",
     "simple-flexbox": "^1.2.0"

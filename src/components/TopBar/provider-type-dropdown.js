@@ -1,13 +1,15 @@
 import React from "react";
 import CheckBoxDropdown from "../Dropdowns/checkbox-dropdown";
 import { Row, Column } from "simple-flexbox";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const defaultSubheaderText = "Not Selected";
 export default class ProviderTypeDropdown extends React.Component {
+  state = {
+    expanded: false
+  };
+
   onCheckboxChanged = (changedOption, selectedValues) => {
-    const { onChange, providerTypes } = this.props;
+    const { onChange } = this.props;
     onChange(changedOption);
   };
 
@@ -15,11 +17,31 @@ export default class ProviderTypeDropdown extends React.Component {
     event.stopPropagation();
     const { onChange = () => {} } = this.props;
     onChange(undefined);
+    this.setExpanded(false);
   };
 
+  selectAllProviderTypes = event => {
+    event.stopPropagation();
+    const { onChange = () => { } } = this.props;
+    const { providerTypes } = this.props;
+
+    providerTypes.allIds.forEach(providerType => {
+      onChange(providerType)
+    });
+  };
+
+  setExpanded = expanded => {
+    this.setState({
+      expanded
+    });
+  };
+
+
   render() {
+    const {expanded} = this.state;
     const { className, providerTypes } = this.props;
     let subheaderText = defaultSubheaderText;
+    let selectOrClearCommand = providerTypes.visible.length > 0 ? "clear all" : "select all"
 
     if (providerTypes.visible.length === 1) {
       const selectedProviderType =
@@ -36,6 +58,8 @@ export default class ProviderTypeDropdown extends React.Component {
           id,
           display: providerTypes.byId[id].name
         }))}
+        expanded={expanded}
+        setExpanded={this.setExpanded}
         onChange={this.onCheckboxChanged}
         visibleTypes={providerTypes.visible}
         header={
@@ -47,9 +71,9 @@ export default class ProviderTypeDropdown extends React.Component {
               </Column>
               <div
                 className="clear-icon-container"
-                onClick={this.clearProviderTypes}
+                onClick={ providerTypes.visible.length > 0 ? this.clearProviderTypes : this.selectAllProviderTypes}
               >
-                <FontAwesomeIcon icon={faTimes} />
+                {selectOrClearCommand}
               </div>
             </Row>
           </>
