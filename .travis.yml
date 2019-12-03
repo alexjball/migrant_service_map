@@ -13,9 +13,10 @@ cache:
   directories:
     # Cache the folder with the Cypress binary
     - ~/.cache
+    - ~/.npm
 
 # TODO: If deployment becomes unreliable, use a package-lock.json and npm ci
-install: echo "Node env $NODE_ENV" && npm install
+install: DEBUG=cypress:* npm install
 script: npm run test:all && npm run build
 
 deploy:
