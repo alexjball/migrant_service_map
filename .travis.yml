@@ -16,7 +16,7 @@ cache:
     - ~/.npm
 
 # TODO: If deployment becomes unreliable, use a package-lock.json and npm ci
-install: DEBUG=cypress:* npm install
+install: DEBUG=cypress:* npm install && ls node_modules && npm install cypress
 script: npm run test:all && npm run build
 
 deploy:
