@@ -37,7 +37,8 @@
     "test:cy": "wait-on http://localhost:${PORT:-3000} && $(npm bin)/cypress run",
     "test:cy-full": "concurrently -n \"server,cypress\" -k -s first \"npm start\" \"npm run test:cy\"",
     "test:all": "CI=true npm test && BROWSER=none npm run test:cy-full",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prettier": "prettier -c 'src/**/*.js'"
   },
   "eslintConfig": {
     "extends": "react-app"

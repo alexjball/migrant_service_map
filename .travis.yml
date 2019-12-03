@@ -15,8 +15,8 @@ addons:
 #     - ~/.cache
 
 # TODO: If deployment becomes unreliable, use a package-lock.json and npm ci
-install: DEBUG=cypress:* npm install && ls ~/.cache/Cypress && DEBUG=cypress:* npm install cypress && ls ~/.cache/Cypress
-script: npm run test:all && npm run build
+install: DEBUG=cypress:* npm install
+script: npm run prettier && npm run test:all && npm run build
 
 deploy:
   provider: firebase
