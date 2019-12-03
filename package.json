@@ -35,7 +35,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:cy": "wait-on http://localhost:${PORT:-3000} && $(npm bin)/cypress run",
-    "test:cy-full": "concurrently -n \"server,cypress\" -k \"npm start\" \"npm run test:cy\"",
+    "test:cy-full": "concurrently -n \"server,cypress\" -k -s first \"npm start\" \"npm run test:cy\"",
     "test:all": "CI=true npm test && BROWSER=none npm run test:cy-full",
     "eject": "react-scripts eject"
   },
