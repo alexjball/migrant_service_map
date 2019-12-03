@@ -15,7 +15,7 @@ addons:
 #     - ~/.cache
 
 # TODO: If deployment becomes unreliable, use a package-lock.json and npm ci
-install: DEBUG=cypress:* npm install
+install: DEBUG=cypress:* npm ci
 script: npm run prettier && npm run test:all && npm run build
 
 deploy:
