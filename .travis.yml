@@ -9,10 +9,10 @@ addons:
       # Ubuntu 16+ does not install this Cypress dependency by default, so we need to install it ourselves
       - libgconf-2-4
 
-# cache:
-#   directories:
-#     # Cache the folder with the Cypress binary
-#     - ~/.cache
+cache:
+  directories:
+    # Cache the folder with the Cypress binary
+    - ~/.cache
 
 install: npm ci
 script: npm run test:all && npm run build
