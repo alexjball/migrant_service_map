@@ -3,6 +3,17 @@
 language: node_js
 node_js: node
 
+addons:
+  apt:
+    packages:
+      # Ubuntu 16+ does not install this Cypress dependency by default, so we need to install it ourselves
+      - libgconf-2-4
+
+cache:
+  directories:
+    # Cache the folder with the Cypress binary
+    - ~/.cache
+
 # TODO: If deployment becomes unreliable, use a package-lock.json and npm ci
 install: npm install
 script: npm run test:all && npm run build
