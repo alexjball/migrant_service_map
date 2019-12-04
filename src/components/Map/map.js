@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import mapboxgl from "./mapbox-gl-wrapper";
 import "./map.css";
 import { circle, point, transformTranslate } from "@turf/turf";
@@ -15,6 +16,8 @@ import {
   getBoundingBox
 } from "./utilities.js";
 import { AnimatedMarker } from "../AnimatedMarker/animated-marker.js";
+
+import { ClusterList } from "../ClusterProviderList/cluster-provider-list.js";
 
 const zoomPadding = { top: 100, bottom: 100, left: 450, right: 100 };
 
@@ -45,6 +48,8 @@ class Map extends Component {
     this.findClustersInMap();
 
     this.loadProviderTypeImage(typeImages);
+
+    this.mapRef.current.classList.add("map-loaded");
     this.setState({ loaded: true });
   };
 
@@ -100,6 +105,25 @@ class Map extends Component {
         filter: ["==", "highlighted", 1],
         layout: {
           "icon-image": "highlightedicon",
+          "icon-size": 0.4,
+          "icon-allow-overlap": true,
+          "icon-ignore-placement": true,
+          "icon-padding": 10,
+          visibility: "visible"
+        }
+      });
+    }
+  };
+
+  setHoveredIconsLayer = () => {
+    if (!this.map.getLayer("hovered")) {
+      this.map.addLayer({
+        id: "hovered",
+        source: "displayData",
+        type: "symbol",
+        filter: ["==", "hovered", true],
+        layout: {
+          "icon-image": "hoveredicon",
           "icon-size": 0.4,
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
@@ -166,6 +190,7 @@ class Map extends Component {
     });
 
     this.addClusterClickHandlerToMapLayer(clusterName);
+    this.addClusterMouseOverHandlerToMapLayer("clusterCircle");
   };
 
   setSingleSourceInMap = () => {
@@ -213,6 +238,40 @@ class Map extends Component {
             zoom: mapZoom >= zoom ? mapZoom + 1 : zoom
           });
         });
+    });
+  };
+
+  addClusterList = (clusterCenter, list) => {
+    ReactDOM.render(
+      <ClusterList list={list} />,
+      document.getElementById("clusterList")
+    );
+  };
+
+  addClusterMouseOverHandlerToMapLayer = clusterName => {
+    const clusterEl = document.createElement("div");
+    clusterEl.id = "clusterList";
+
+    const clusterListMarker = new mapboxgl.Marker({
+      element: clusterEl,
+      anchor: "bottom",
+      offset: [0, -15]
+    });
+
+    this.map.on("mouseenter", clusterName, e => {
+      const clusterId = e.features[0].id;
+      const mySource = this.map.getSource("displayData");
+      const clusterLngLat = e.lngLat;
+
+      mySource.getClusterLeaves(clusterId, 100, 0, (error, children) => {
+        const childList = children.map(child => child.properties);
+        clusterListMarker.setLngLat(clusterLngLat).addTo(this.map);
+        this.addClusterList(clusterLngLat, childList);
+      });
+    });
+
+    this.map.on("mouseleave", clusterName, e => {
+      clusterListMarker.remove();
     });
   };
 
@@ -269,13 +328,18 @@ class Map extends Component {
   };
 
   geoJSONFeatures = () => {
-    let { highlightedProviders, visibleProviders = [] } = this.props;
+    let { highlightedProviders, visibleProviders = [], hoveredProvider } = this.props;
     visibleProviders.forEach(
       (provider) => {
         provider.highlighted = highlightedProviders.includes(provider.id) ? 1 : 0;
-        return provider;
+
+        if (hoveredProvider === provider.id) {
+          provider.hovered = true;
+        } else {
+          provider.hovered = false;
+        }
       }
-    ); 
+    );
     return convertProvidersToGeoJSON(visibleProviders);
   };
 
@@ -435,8 +499,8 @@ class Map extends Component {
    */
   zoomToShowNewProviders = (prevProps, mapBounds) => {
     const prevIds = filterProviderIds(
-        providersById(prevProps.visibleProviders),
-        prevProps.highlightedProviders
+      providersById(prevProps.visibleProviders),
+      prevProps.highlightedProviders
       ),
       currIds = filterProviderIds(
         providersById(this.props.visibleProviders),
@@ -479,6 +543,7 @@ class Map extends Component {
       this.props.loadedProviderTypeIds.map(typeId =>
         this.findLayerInMap(typeId)
       );
+      this.setHoveredIconsLayer();
       this.setHighlightedIconsLayer();
       this.updatePinAndDistanceIndicator(prevProps);
       const mapBounds = this.getPaddedMapBounds();
@@ -499,7 +564,7 @@ class Map extends Component {
         const { flyToProviderId } = this.props.search;
         const { coordinates } = providersById(this.props.visibleProviders)[
           flyToProviderId
-        ];
+          ];
         this.map.flyTo({
           center: coordinates,
           zoom: MIN_UNCLUSTERED_ZOOM
